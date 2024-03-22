@@ -24,10 +24,10 @@ class TestFunctions(unittest.TestCase):
 
     def test_HG(self):
         self.assertAlmostEqual(HG(20, 7, 0.15), 8.00010912)
-    
+
     def test_HG12(self):
         self.assertAlmostEqual(HG12(20, 7, 0.15), 7.85185626)
-    
+
     def test_HG12PEN(self):
         self.assertAlmostEqual(HG12PEN(20, 7, 0.15), 7.95718260)
 
@@ -117,7 +117,7 @@ class TestPhaseCurve(unittest.TestCase):
         self.assertEqual(phase_curve.beta, bt)
         for allowed_model in allowedPhaseCurveModels:
             self.assertIsInstance(phase_curve.model(allowed_model.lower()), list)
-            self.assertIsInstance(phase_curve.model(allowed_model), list)  
+            self.assertIsInstance(phase_curve.model(allowed_model), list)
 
      # case of angle and magnitude np array
     def test_init_angle_magnitude_np_array(self):
@@ -140,15 +140,12 @@ class TestPhaseCurve(unittest.TestCase):
         self.assertEqual(phase_curve.beta, bt)
         for allowed_model in allowedPhaseCurveModels:
             self.assertIsInstance(phase_curve.model(allowed_model.lower()), np.ndarray)
-            self.assertIsInstance(phase_curve.model(allowed_model), np.ndarray) 
+            self.assertIsInstance(phase_curve.model(allowed_model), np.ndarray)
 
-    
-        
-            
-            
+
+
+
+
 
 if __name__ == "__main__":
     unittest.main()
-
-    
-
