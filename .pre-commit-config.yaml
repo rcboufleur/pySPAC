@@ -1,25 +1,21 @@
+# .pre-commit-config.yaml
 repos:
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v2.3.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-toml
-      - id: check-xml
-      - id: check-yaml
-      - id: debug-statements
-      - id: check-builtin-literals
-      - id: check-case-conflict
-      - id: check-docstring-first
-      - id: detect-private-key
-  - repo: https://github.com/psf/black
-    rev: 24.1.1
-    hooks:
-      - id: black
-        language_version: python3
-  - repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        name: isort (python)
-        args: ['--profile', 'black']
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.3.0  # Use the latest tag from https://github.com/pre-commit/pre-commit-hooks/releases
+  hooks:
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+    - id: check-yaml
+    - id: check-added-large-files
+    - id: check-merge-conflict
+- repo: https://github.com/psf/black
+  rev: 23.1.0  # Use the latest tag from https://github.com/psf/black/releases
+  hooks:
+    - id: black
+      language_version: python3.11  # Adjust if you use a different Python version
+      args: ['--line-length=79']  # Ensure Black uses the same line length as flake8
+
+- repo: https://github.com/PyCQA/flake8
+  rev: 6.0.0  # Use the latest tag from https://github.com/PyCQA/flake8/releases
+  hooks:
+    - id: flake8
