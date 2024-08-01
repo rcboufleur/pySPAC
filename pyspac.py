@@ -9,7 +9,7 @@ from lmfit import Parameters, minimize
 # Constants
 ALLOWED_PHASE_CURVE_MODELS = ["HG", "HG12", "HG12PEN", "HG1G2", "LINEAR"]
 FITTING_MODELS = ["HG1G2", "HG", "HG12", "HG12PEN", "LINEAR"]
-FITTING_METHODS = ["Cobyla"]
+FITTING_METHODS = ["Cobyla", "SLSQP", "trust-constr"]
 PARAMETER_KEYS = {
     "HG": ["H", "G"],
     "HG12": ["H", "G12"],
@@ -161,9 +161,43 @@ def fit_model(
     method: str,
     initial_conditions: Optional[List[float]] = None,
 ) -> Dict:
+    if method not in FITTING_METHODS:
+        raise ValueError(
+            f"Invalid fitting method. Choose from:"
+            f"{', '.join(FITTING_METHODS)}"
+        )
+
     angles = np.array(angle)
     magnitudes = np.array(magnitude)
     mean_mag = np.mean(magnitudes)
+
+    # Number of parameters for each model
+    num_parameters = {
+        "HG": 2,
+        "HG12": 2,
+        "HG12PEN": 2,
+        "HG1G2": 3,
+        "LINEAR": 2,
+    }
+
+    # Number of constraints for each model
+    num_constraints = {
+        "HG": 1,
+        "HG12": 2,
+        "HG12PEN": 1,
+        "HG1G2": 1,
+        "LINEAR": 0,
+    }
+
+    # Get the number of parameters and constraints for the given model
+    n = num_parameters.get(model, 0)
+    c = num_constraints.get(model, 0)
+
+    # Ensure there are enough data points
+    if len(angles) < (n + 1 + c):
+        raise ValueError(
+            f"Not enough data points. At least {n + 1 + c} are required."
+        )
 
     params = fitting_model_parameter_object(
         model, mean_mag, initial_conditions
@@ -181,7 +215,10 @@ def fit_model(
             args=(angles, magnitudes, model, PARAMETER_KEYS[model]),
             method=method,
         )
-        result = res1 if res1.residual < res2.residual else res2
+        # Use sum of squares of residuals for comparison
+        res1_sum_sq = np.sum(res1.residual**2)
+        res2_sum_sq = np.sum(res2.residual**2)
+        result = res1 if res1_sum_sq < res2_sum_sq else res2
     else:
         result = minimize(
             fit_residual,
@@ -193,9 +230,9 @@ def fit_model(
     return result
 
 
-def bootstrap_simulated_magnitudes(
+def montecarlo_simulated_magnitudes(
     magnitudes: Union[List[float], np.ndarray],
-    n_bootstraps: int,
+    n_simulations: int,
     distribution: str,
     amplitude_variation: float,
 ) -> np.ndarray:
@@ -207,14 +244,14 @@ def bootstrap_simulated_magnitudes(
 
     if distribution == "uniform":
         random_values = (
-            np.random.uniform(-1, 1, (n_bootstraps, len(magnitudes)))
+            np.random.uniform(-1, 1, (n_simulations, len(magnitudes)))
             * amplitude_variation
         )
     elif distribution == "sinusoidal":
         random_values = (
             np.sin(
                 np.random.uniform(
-                    0, 2 * np.pi, (n_bootstraps, len(magnitudes))
+                    0, 2 * np.pi, (n_simulations, len(magnitudes))
                 )
             )
             * amplitude_variation
@@ -239,7 +276,7 @@ class PhaseCurve:
         fitting_model: Optional[str] = None,
         fitting_method: Optional[str] = None,
         fit_residual: Optional[List[float]] = None,
-        bootstrap_results: Optional[Dict] = None,
+        montecarlo_unknownRotation: Optional[List[float]] = None,
     ) -> None:
         if isinstance(magnitude, (float, list, np.ndarray)) and type(
             angle
@@ -275,9 +312,9 @@ class PhaseCurve:
         self.fitting_model = fitting_model
         self.fitting_method = fitting_method
         self.fit_residual = fit_residual
-        self.bootstrap_results = bootstrap_results
+        montecarlo_unknownRotation = montecarlo_unknownRotation
 
-    def generate_model(
+    def generateModel(
         self,
         model: str,
         degrees: Optional[Union[float, List[float], np.ndarray]] = None,
@@ -308,7 +345,7 @@ class PhaseCurve:
 
         return values_type_parsed
 
-    def fit_model(
+    def fitModel(
         self,
         model: str,
         method: str,
@@ -357,11 +394,11 @@ class PhaseCurve:
             return fit_result
 
         except Exception as e:
-            raise ValueError("Fitting procedure failed.") from e
+            raise ValueError(f"Fitting procedure failed. {e}")
 
-    def bootstrap_unknown_rotation(
+    def montecarlo_unknownRotation(
         self,
-        n_bootstraps: int,
+        n_simulations: int,
         amplitude_variation: float,
         model: str,
         distribution: Optional[str] = "sinusoidal",
@@ -371,17 +408,17 @@ class PhaseCurve:
         magnitudes = np.array(self.magnitude)
         angles = np.array(self.angle)
 
-        simulated_magnitudes = bootstrap_simulated_magnitudes(
-            magnitudes, n_bootstraps, distribution, amplitude_variation
+        simulated_magnitudes = montecarlo_simulated_magnitudes(
+            magnitudes, n_simulations, distribution, amplitude_variation
         )
         chunk_size = 100
-        num_chunks = math.ceil(n_bootstraps / chunk_size)
+        num_chunks = math.ceil(n_simulations / chunk_size)
         all_results = {}
 
         with Pool(n_threads) as p:
             for chunk_index in range(num_chunks):
                 start_index = chunk_index * chunk_size
-                end_index = min((chunk_index + 1) * chunk_size, n_bootstraps)
+                end_index = min((chunk_index + 1) * chunk_size, n_simulations)
                 chunk_simulated_magnitudes = simulated_magnitudes[
                     start_index:end_index
                 ]
@@ -415,16 +452,15 @@ class PhaseCurve:
                 map(pm.HG12_Pen16._G12_to_G1, all_results["G12"])
             )
             all_results["G2"] = list(
-                map(pm.HG12_Pen16._G12_to_G1, all_results["G12"])
+                map(pm.HG12_Pen16._G12_to_G2, all_results["G12"])
             )
-
-        self.bootstrap_results = all_results
+        self.montecarlo_unknownRotation = all_results
         return all_results
 
-    def to_json(self) -> Dict:
+    def toJSON(self) -> Dict:
         return json.dumps(self.__dict__)
 
     @staticmethod
-    def from_json(json_str: str) -> "PhaseCurve":
+    def fromJSON(json_str: str) -> "PhaseCurve":
         data = json.loads(json_str)
         return PhaseCurve(**data)
