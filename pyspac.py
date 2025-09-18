@@ -1,7 +1,7 @@
 import json
 from multiprocessing import Pool
 from typing import Dict, List, Optional, Union
-import math
+
 import numpy as np
 import sbpy.photometry as pm
 from lmfit import Parameters, minimize
@@ -101,7 +101,8 @@ def _fit_residual(
 def _fitting_model_parameter_object(
     model: str, avg_H: float, initial_conditions: Optional[List[List]] = None
 ) -> Union[Parameters, List[Parameters]]:
-    """Sets up the initial parameters and constraints for the fitting models."""
+    """Sets up the initial parameters and constraints."""
+
     def parse_initial_conditions(conditions):
         valid_conditions = []
         for ic in conditions:
@@ -182,7 +183,8 @@ def _fit_model(
     """Performs the least-squares fitting of a phase curve model to data."""
     if method not in FITTING_METHODS:
         raise ValueError(
-            f"Invalid fitting method. Choose from: {', '.join(FITTING_METHODS)}"
+            f"Invalid fitting method. "
+            f"Choose from: {', '.join(FITTING_METHODS)}"
         )
 
     # Get the number of parameters and constraints for the given model
@@ -192,8 +194,10 @@ def _fit_model(
     # Check for method compatibility with constraints
     if c > 0 and method not in ["Cobyla", "SLSQP", "trust-constr"]:
         raise ValueError(
-            f"The '{model}' model has constraints (c={c}), but the selected method "
-            f"'{method}' does not support them. Please use a compatible method."
+            f"The '{model}' model has constraints (c={c}), "
+            f"but the selected method "
+            f"'{method}' does not support them. Please use a"
+            f" compatible method."
         )
 
     # Ensure there are enough data points
@@ -203,7 +207,9 @@ def _fit_model(
         )
 
     mean_mag = np.mean(magnitude)
-    params = _fitting_model_parameter_object(model, mean_mag, initial_conditions)
+    params = _fitting_model_parameter_object(
+        model, mean_mag, initial_conditions
+    )
 
     if isinstance(params, list):
         # Special case for HG12 model with two sets of constraints
@@ -280,44 +286,68 @@ class PhaseCurve:
         fit_residual: Optional[List[float]] = None,
         montecarlo_uncertainty: Optional[Dict] = None,
     ) -> None:
-        self.angle = np.asarray(angle) if isinstance(angle, (list, np.ndarray)) else angle
-        self.magnitude = np.asarray(magnitude) if isinstance(magnitude, (list, np.ndarray)) else magnitude
+        self.angle = (
+            np.asarray(angle)
+            if isinstance(angle, (list, np.ndarray))
+            else angle
+        )
+        self.magnitude = (
+            np.asarray(magnitude)
+            if isinstance(magnitude, (list, np.ndarray))
+            else magnitude
+        )
 
-        if isinstance(self.angle, np.ndarray) and isinstance(self.magnitude, np.ndarray):
+        if isinstance(self.angle, np.ndarray) and isinstance(
+            self.magnitude, np.ndarray
+        ):
             if self.angle.shape != self.magnitude.shape:
-                raise ValueError("`angle` and `magnitude` must have the same shape.")
+                raise ValueError(
+                    "`angle` and `magnitude` must have the same shape."
+                )
             if np.isnan(self.angle).any() or np.isinf(self.angle).any():
                 raise ValueError("`angle` array contains NaN or Inf values.")
-            if np.isnan(self.magnitude).any() or np.isinf(self.magnitude).any():
-                raise ValueError("`magnitude` array contains NaN or Inf values.")
+            if (
+                np.isnan(self.magnitude).any()
+                or np.isinf(self.magnitude).any()
+            ):
+                raise ValueError(
+                    "`magnitude` array contains NaN or Inf values."
+                )
 
         # Store parameters in a dictionary for a more flexible design
         self.params = {}
         if H is not None:
-            self.params['H'] = H
+            self.params["H"] = H
         if G is not None:
-            self.params['G'] = G
+            self.params["G"] = G
         if G12 is not None:
-            self.params['G12'] = G12
+            self.params["G12"] = G12
         if G1 is not None:
-            self.params['G1'] = G1
+            self.params["G1"] = G1
         if G2 is not None:
-            self.params['G2'] = G2
+            self.params["G2"] = G2
         if beta is not None:
-            self.params['beta'] = beta
+            self.params["beta"] = beta
 
-        self.magnitude_unc = np.asarray(magnitude_unc) if isinstance(magnitude_unc, (list, np.ndarray)) else magnitude_unc
+        self.magnitude_unc = (
+            np.asarray(magnitude_unc)
+            if isinstance(magnitude_unc, (list, np.ndarray))
+            else magnitude_unc
+        )
         self.fitting_status = fitting_status
         self.fitting_model = fitting_model
         self.fitting_method = fitting_method
         self.fit_residual = fit_residual
         self.montecarlo_uncertainty = montecarlo_uncertainty
 
-
-    def generateModel(self, model: str, degrees: Optional[Union[float, List[float], np.ndarray]] = None) -> Union[float, List[float], np.ndarray]:
+    def generateModel(
+        self,
+        model: str,
+        degrees: Optional[Union[float, List[float], np.ndarray]] = None,
+    ) -> Union[float, List[float], np.ndarray]:
         """
-        Generates magnitude values based on a specified phase curve model and the
-        instance's stored parameters.
+        Generates magnitude values based on a specified phase curve model
+        and the instance's stored parameters.
 
         Parameters
         ----------
@@ -341,7 +371,8 @@ class PhaseCurve:
         model = model.upper()
         if model not in ALLOWED_PHASE_CURVE_MODELS:
             raise ValueError(
-                f"Invalid model '{model}'. Must be one of: {', '.join(ALLOWED_PHASE_CURVE_MODELS)}"
+                f"Invalid model '{model}'. Must be one of:"
+                f" {', '.join(ALLOWED_PHASE_CURVE_MODELS)}"
             )
 
         params_to_extract = PARAMETER_KEYS.get(model, [])
@@ -353,17 +384,18 @@ class PhaseCurve:
             )
 
         fn = _call_model_function(model)
-        degrees_arr = np.asarray(degrees) if degrees is not None else self.angle
-        
+        degrees_arr = (
+            np.asarray(degrees) if degrees is not None else self.angle
+        )
+
         values = fn(degrees_arr, *params)
         return values.tolist() if isinstance(degrees, list) else values
-
 
     def fitModel(
         self,
         model: str,
         method: str,
-        initial_conditions: Optional[List[List]] = None
+        initial_conditions: Optional[List[List]] = None,
     ) -> ModelResult:
         """
         Fits a phase curve model to the instance's angle and magnitude data.
@@ -390,10 +422,14 @@ class PhaseCurve:
             If the fitting procedure fails.
         """
         if self.angle is None or self.magnitude is None:
-            raise ValueError("`angle` and `magnitude` must be set before fitting.")
+            raise ValueError(
+                "`angle` and `magnitude` must be set before fitting."
+            )
 
         try:
-            fit_result = _fit_model(self.angle, self.magnitude, model, method, initial_conditions)
+            fit_result = _fit_model(
+                self.angle, self.magnitude, model, method, initial_conditions
+            )
             self.fitting_status = True
             self.fitting_model = model
             self.fitting_method = method
@@ -405,18 +441,21 @@ class PhaseCurve:
 
             if model in ["HG12", "HG12PEN"]:
                 self.params["G1"] = (
-                    pm.HG12._G12_to_G1(self.params["G12"]) 
-                    if model == "HG12" else pm.HG12_Pen16._G12_to_G1(self.params["G12"])
+                    pm.HG12._G12_to_G1(self.params["G12"])
+                    if model == "HG12"
+                    else pm.HG12_Pen16._G12_to_G1(self.params["G12"])
                 )
                 self.params["G2"] = (
                     pm.HG12._G12_to_G2(self.params["G12"])
-                    if model == "HG12" else pm.HG12_Pen16._G12_to_G2(self.params["G12"])
+                    if model == "HG12"
+                    else pm.HG12_Pen16._G12_to_G2(self.params["G12"])
                 )
 
             return fit_result
         except Exception as e:
-            raise RuntimeError(f"Fitting procedure failed. Original error: {e}")
-
+            raise RuntimeError(
+                f"Fitting procedure failed. Original error: {e}"
+            )
 
     def monteCarloUnknownRotation(
         self,
@@ -428,15 +467,15 @@ class PhaseCurve:
         n_threads: int = 1,
     ) -> Dict:
         """
-        Performs a Monte Carlo simulation to estimate uncertainties in fitted parameters,
-        specifically for the case of UNKNOWN ROTATION.
+        Performs a Monte Carlo simulation to estimate uncertainties in
+        fitted parameters, specifically for the case of UNKNOWN ROTATION.
 
-        This method simulates rotational light curve variations by adding random
-        noise (either uniform or sinusoidal) to the observed magnitudes. The
-        randomness represents the unknown rotation of the object, which can
-        introduce scatter in the phase curve data. The simulation then fits the
-        chosen model to each perturbed dataset to determine the distribution of
-        the fitted parameters.
+        This method simulates rotational light curve variations by adding
+        random noise (either uniform or sinusoidal) to the observed
+        magnitudes. The randomness represents the unknown rotation of the
+        object, which can introduce scatter in the phase curve data. The
+        simulation then fits the chosen model to each perturbed dataset to
+        determine the distribution of the fitted parameters.
 
         Parameters
         ----------
@@ -450,7 +489,8 @@ class PhaseCurve:
             The distribution of the noise ("uniform" or "sinusoidal").
             Defaults to "sinusoidal".
         method : str, optional
-            The fitting method to use for each simulation. Defaults to "Cobyla".
+            The fitting method to use for each simulation. Defaults to
+            "Cobyla".
         n_threads : int, optional
             The number of CPU cores to use for parallel processing.
             Defaults to 1.
@@ -462,20 +502,27 @@ class PhaseCurve:
             each simulation.
         """
         if self.angle is None or self.magnitude is None:
-            raise ValueError("`angle` and `magnitude` must be set before simulation.")
-        
+            raise ValueError(
+                "`angle` and `magnitude` must be set before simulation."
+            )
+
         if distribution not in ["uniform", "sinusoidal"]:
-            raise ValueError("Invalid distribution. Must be 'uniform' or 'sinusoidal'.")
-        
+            raise ValueError(
+                "Invalid distribution. Must be 'uniform' or 'sinusoidal'."
+            )
+
         if method not in FITTING_METHODS:
             raise ValueError(
-                f"Invalid fitting method. Must be one of: {', '.join(FITTING_METHODS)}"
+                f"Invalid fitting method. Must be one of:"
+                f" {', '.join(FITTING_METHODS)}"
             )
-            
+
         magnitudes = np.asarray(self.magnitude)
         angles = np.asarray(self.angle)
 
-        simulated_magnitudes = _montecarlo_simulated_magnitudes(magnitudes, n_simulations, distribution, amplitude_variation)
+        simulated_magnitudes = _montecarlo_simulated_magnitudes(
+            magnitudes, n_simulations, distribution, amplitude_variation
+        )
 
         all_results = {key: [] for key in PARAMETER_KEYS[model]}
 
@@ -490,14 +537,22 @@ class PhaseCurve:
                 if res and res.success:
                     for key in PARAMETER_KEYS[model]:
                         all_results[key].append(res.params[key].value)
-                    
+
         # Calculate additional parameters for HG12 and HG12PEN
         if model == "HG12":
-            all_results["G1"] = list(map(pm.HG12._G12_to_G1, all_results["G12"]))
-            all_results["G2"] = list(map(pm.HG12._G12_to_G2, all_results["G12"]))
+            all_results["G1"] = list(
+                map(pm.HG12._G12_to_G1, all_results["G12"])
+            )
+            all_results["G2"] = list(
+                map(pm.HG12._G12_to_G2, all_results["G12"])
+            )
         elif model == "HG12PEN":
-            all_results["G1"] = list(map(pm.HG12_Pen16._G12_to_G1, all_results["G12"]))
-            all_results["G2"] = list(map(pm.HG12_Pen16._G12_to_G2, all_results["G12"]))
+            all_results["G1"] = list(
+                map(pm.HG12_Pen16._G12_to_G1, all_results["G12"])
+            )
+            all_results["G2"] = list(
+                map(pm.HG12_Pen16._G12_to_G2, all_results["G12"])
+            )
 
         self.montecarlo_uncertainty = all_results
         return all_results
