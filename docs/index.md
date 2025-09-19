@@ -2,6 +2,13 @@
 
 pySPAC (python Solar Phase curve Analysis and Characterization) is a library for analyzing and fitting astronomical phase curves of asteroids and other small solar system bodies.
 
+## Repository & Links
+
+- **GitHub Repository**: [https://github.com/rcboufleur/pySPAC](https://github.com/rcboufleur/pySPAC)
+- **PyPI Package**: [https://pypi.org/project/pyspac/](https://pypi.org/project/pyspac/)
+- **Documentation**: [https://rcboufleur.github.io/pySPAC/](https://rcboufleur.github.io/pySPAC/)
+- **Issue Tracker**: [https://github.com/rcboufleur/pySPAC/issues](https://github.com/rcboufleur/pySPAC/issues)
+
 ## What pySPAC Does
 
 pySPAC determines the absolute magnitude (H) and other phase function parameters from phase angle (α) and reduced magnitude observations using:
