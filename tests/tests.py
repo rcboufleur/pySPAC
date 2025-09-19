@@ -36,7 +36,7 @@ def test_clear_fit_results():
 def test_summary():
     """Test summary method prints basic info."""
     pc = PhaseCurve(angle=[10, 20], magnitude=[12.0, 12.5], H=8.0)
-    with patch('builtins.print') as mock_print:
+    with patch("builtins.print") as mock_print:
         pc.summary()
         printed = " ".join([str(call) for call in mock_print.call_args_list])
         assert "Data Points" in printed
@@ -46,7 +46,7 @@ def test_estimate_uncertainty_from_rms():
     """Test RMS uncertainty estimation (mocked)."""
     # Use 3 data points so degrees of freedom > 0 for 2 fit parameters
     pc = PhaseCurve(angle=[10, 20, 30], magnitude=[12.0, 12.5, 12.2])
-    with patch.object(pc, 'fitModel') as mock_fit:
+    with patch.object(pc, "fitModel") as mock_fit:
         mock_result = MagicMock()
         # residual length must match number of data points
         mock_result.residual = np.array([0.1, -0.1, 0.05])
@@ -70,7 +70,7 @@ def test_generate_model():
 def test_fit_model():
     """Test fitModel method (mocked)."""
     pc = PhaseCurve(angle=[10, 20], magnitude=[12.0, 12.5])
-    with patch('pyspac.pyspac._fit_model') as mock_fit:
+    with patch("pyspac.pyspac._fit_model") as mock_fit:
         mock_result = MagicMock()
         mock_result.success = True
         mock_result.residual = np.array([0.1, -0.1])
@@ -79,7 +79,7 @@ def test_fit_model():
         mock_h.value = 8.0
         mock_g = MagicMock()
         mock_g.value = 0.15
-        mock_params.items.return_value = [('H', mock_h), ('G', mock_g)]
+        mock_params.items.return_value = [("H", mock_h), ("G", mock_g)]
         mock_result.params = mock_params
         mock_fit.return_value = mock_result
 
@@ -91,8 +91,8 @@ def test_fit_model():
 def test_monte_carlo_uncertainty():
     """Test monteCarloUncertainty (mocked)."""
     pc = PhaseCurve(angle=[10, 20], magnitude=[12.0, 12.5], magnitude_unc=[0.1, 0.1])
-    with patch('pyspac.pyspac.Pool') as mock_pool:
-        with patch('pyspac.pyspac._fit_wrapper') as mock_wrapper:
+    with patch("pyspac.pyspac.Pool") as mock_pool:
+        with patch("pyspac.pyspac._fit_wrapper") as mock_wrapper:
             mock_result = MagicMock()
             mock_result.success = True
             mock_h = MagicMock()
