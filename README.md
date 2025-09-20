@@ -98,9 +98,24 @@ Contributions are welcome! Please:
 
 Feel free to open an issue to report bugs or suggest new features.
 
-## References
+## How to Cite
 
-If you use pySPAC in your research, please cite this repository and the relevant papers for the models you employ:
+If you use pySPAC in your research, please cite:
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17163112.svg)](https://doi.org/10.5281/zenodo.17163112)
+
+```bibtex
+@software{boufleur_pyspac_2025,
+  author = {Boufleur, Rodrigo Carlos},
+  title = {pySPAC: Solar Phase curve Analysis and Characterization},
+  url = {https://github.com/rcboufleur/pySPAC},
+  doi = {10.5281/zenodo.17163112},
+  version = {0.1.0},
+  year = {2025}
+}
+```
+
+Additionally, please cite the relevant papers for the models you employ:
 
 - **HG System**: Bowell, E., et al. (1989). "Application of photometric models to asteroids." In Asteroids II (pp. 524-556).
 - **HG1G2 & HG12 Systems**: Muinonen, K., et al. (2010). "A three-parameter magnitude phase function for asteroids." Icarus, 209(2), 542-555.
