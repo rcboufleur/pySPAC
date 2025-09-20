@@ -39,6 +39,12 @@ new_angles = np.array([1, 5, 10, 15, 20, 25, 30])
 extended_mags = pc.generateModel(model="HG", degrees=new_angles)
 print("Model at extended angles:", extended_mags)
 ```
+```console
+Model at original angles: [6.95322579 6.99455516 7.02274888 7.06830039 7.22616926 7.35526372
+ 7.42522086 7.43249424 7.44442226 7.51929385 7.54999792 7.56988952]
+Model at extended angles: [7.02428427 7.22788627 7.36022689 7.47084845 7.58344709 7.6956334
+ 7.80641673]
+```
 
 ### Single Point Generation
 
@@ -51,6 +57,11 @@ print(f"Magnitude at 10°: {mag_at_10deg:.3f}")
 h_magnitude = pc.generateModel(model="HG", degrees=0.0)
 print(f"H parameter: {pc.params['H']:.3f}")
 print(f"Magnitude at 0°: {h_magnitude:.3f}")  # Should match H
+```
+```console
+Magnitude at 10°: 7.360
+H parameter: 6.937
+Magnitude at 0°: 6.937
 ```
 
 ## Theoretical Models
@@ -76,6 +87,9 @@ angles, mags = create_theoretical_model(
 )
 
 print(f"Generated {len(angles)} points from 0° to 30°")
+```
+```console
+Generated 100 points from 0° to 30°
 ```
 
 ### Standard Asteroid Types
@@ -114,7 +128,7 @@ import matplotlib.pyplot as plt
 
 models = generate_standard_types()
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(8, 4))
 for ast_type, data in models.items():
     plt.plot(data['angles'], data['magnitudes'],
              label=f"{ast_type} (G={data['params']['G']})")
@@ -126,6 +140,7 @@ plt.title('Standard Asteroid Type Phase Curves (HG model)')
 plt.legend()
 plt.show()
 ```
+![Standard Type Asteroid](images/standard-asteroid.png)
 
 ## Model Comparisons
 
@@ -145,7 +160,7 @@ def compare_photometric_models(h_value=15.0):
 
     phase_angles = np.linspace(0, 30, 200)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 4))
 
     for model, params in model_params.items():
         pc = PhaseCurve(angle=phase_angles, **params)
@@ -163,6 +178,8 @@ def compare_photometric_models(h_value=15.0):
 # Usage
 compare_photometric_models(h_value=15.0)
 ```
+
+![Photometric Model Comparison](images/photometric-model-comparison.png)
 
 ### Parameter Sensitivity
 
@@ -183,7 +200,7 @@ def parameter_sensitivity(model="HG", base_params=None, vary_param='G'):
 
     phase_angles = np.linspace(0, 30, 200)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 4))
 
     for i, var_value in enumerate(variations):
         # Create parameter set
@@ -211,6 +228,10 @@ def parameter_sensitivity(model="HG", base_params=None, vary_param='G'):
 parameter_sensitivity(model="HG", vary_param='G')
 parameter_sensitivity(model="HG", vary_param='H')
 ```
+
+![G Parameter Sensitivity](images/g-parameter-sensitivity.png)
+
+![H Parameter Sensitivity](images/h-parameter-sensitivity.png)
 
 ## Synthetic Datasets
 
@@ -245,7 +266,7 @@ def generate_synthetic_dataset(model, params, phase_angles, noise_level=0.02, se
 
 # Generate test dataset
 true_params = {'H': 15.234, 'G': 0.187}
-test_angles = np.array([3, 7, 11, 16, 21, 26])
+test_angles = np.array([3., 7., 11., 16., 21., 26.])
 
 synthetic_data = generate_synthetic_dataset(
     model="HG",
@@ -259,6 +280,12 @@ print("Synthetic dataset generated:")
 print(f"True H: {true_params['H']:.3f}")
 print(f"True G: {true_params['G']:.3f}")
 print(f"Noise level: {0.03:.3f} mag")
+```
+```console
+Synthetic dataset generated:
+True H: 15.234
+True G: 0.187
+Noise level: 0.030 mag
 ```
 
 ### Parameter Recovery Testing
@@ -320,6 +347,22 @@ def test_parameter_recovery(model, true_params, n_datasets=50):
 true_params = {'H': 15.234, 'G': 0.187}
 test_parameter_recovery("HG", true_params)
 ```
+```console
+Parameter Recovery Test (HG model):
+Successful fits: 50/50
+
+H:
+  True value: 15.2340
+  Mean recovered: 15.2441
+  Standard deviation: 0.0233
+  Bias: 0.0101
+
+G:
+  True value: 0.1870
+  Mean recovered: 0.1982
+  Standard deviation: 0.0248
+  Bias: 0.0112
+```
 
 ## Model Extrapolation
 
@@ -337,7 +380,7 @@ def extrapolate_model(pc, extended_range=(0, 60)):
     extended_angles = np.linspace(extended_range[0], extended_range[1], 300)
     extended_mags = pc.generateModel(model=pc.fitting_model, degrees=extended_angles)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 4))
 
     # Plot original data
     plt.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
@@ -373,3 +416,5 @@ def extrapolate_model(pc, extended_range=(0, 60)):
 # Usage after fitting
 extended_angles, extended_mags = extrapolate_model(pc, extended_range=(0, 45))
 ```
+
+![Model Extrapolation](images/model-extrapolation.png)

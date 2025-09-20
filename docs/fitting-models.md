@@ -20,6 +20,21 @@ pc.fitModel(model="HG", method="trust-constr")
 # View results
 pc.summary()
 ```
+```console
+================== PhaseCurve Summary ==================
+Data Points:         12
+Angle Range:         0.17° to 19.40°
+Magnitude Range:     6.91 to 7.60
+------------------------------------------------------
+Fitting Status:      SUCCESS
+Model:               HG
+Method:              trust-constr
+Fit RMS:             0.9365
+------------------- Model Parameters -------------------
+  H                    6.9365
+  G                    0.4731
+======================================================
+```
 
 ## Available Models
 
@@ -132,19 +147,6 @@ pc.fitModel(model="HG", method="trust-constr")  # Uses weights
 # Unweighted fitting
 pc = PhaseCurve(angle=angles, magnitude=mags)  # No magnitude_unc
 pc.fitModel(model="HG", method="trust-constr")  # Equal weights
-```
-
-## Accessing Fit Quality
-
-```python
-# RMS of residuals
-residuals = np.array(pc.fit_residual)
-rms = np.sqrt(np.mean(residuals**2))
-print(f"RMS: {rms:.4f} mag")
-
-# Individual residuals
-for i, res in enumerate(pc.fit_residual):
-    print(f"Point {i+1}: {res:.4f} mag")
 ```
 
 ## Next Steps

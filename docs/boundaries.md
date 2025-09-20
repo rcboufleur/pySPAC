@@ -143,6 +143,10 @@ for conditions in starting_points:
 print(f"Best RMS: {best_rms:.4f}")
 print(f"Best parameters: {best_params}")
 ```
+```console
+Best RMS: 0.8549
+Best parameters: {'H': 6.93653593554117, 'G': 0.4730865728694542, 'constraint': 0.5269134271305458}
+```
 
 ## Data-Driven Initial Conditions
 

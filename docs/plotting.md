@@ -45,7 +45,7 @@ def plot_phase_curve(pc, model_name=None, title="Phase Curve"):
     if model_name is None:
         model_name = pc.fitting_model
 
-    fig, ax = plt.subplots(figsize=(9, 6))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     # Plot data with error bars
     ax.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
@@ -69,7 +69,7 @@ def plot_phase_curve(pc, model_name=None, title="Phase Curve"):
 
         textstr = '\n'.join(param_text)
         props = dict(boxstyle='round', facecolor='white', alpha=1)
-        ax.text(0.03, 0.1, textstr, transform=ax.transAxes,
+        ax.text(0.03, 0.15, textstr, transform=ax.transAxes,
                verticalalignment='top', bbox=props)
 
     # Formatting
@@ -103,7 +103,7 @@ def plot_residuals(pc):
 
     residuals = np.array(pc.fit_residual)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))
 
     # Residuals vs phase angle
     ax1.plot(pc.angle, residuals, 'o-', markersize=6)
@@ -145,7 +145,7 @@ plot_residuals(pc)
 def plot_model_comparison(pc, models=["HG", "HG12", "LINEAR"]):
     """Compare multiple models on same data."""
 
-    fig, ax = plt.subplots(figsize=(9, 6))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     # Plot data
     ax.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
@@ -211,7 +211,7 @@ def plot_parameter_distributions(pc):
     mc_data = pc.montecarlo_uncertainty
     n_params = len(mc_data)
 
-    fig, axes = plt.subplots(1, n_params, figsize=(5*n_params, 5))
+    fig, axes = plt.subplots(1, n_params, figsize=(8,4))
     if n_params == 1:
         axes = [axes]
 
@@ -237,7 +237,7 @@ def plot_parameter_distributions(pc):
         ax.set_xlabel(param)
         ax.set_ylabel('Probability Density')
         ax.set_title(f'{param} Distribution')
-        ax.legend()
+        ax.legend(fontsize="small")
         ax.grid(True, alpha=0.3)
 
     plt.tight_layout()
