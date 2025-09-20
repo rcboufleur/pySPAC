@@ -1,0 +1,23 @@
+site_name: pySPAC Documentation
+docs_dir: .
+site_dir: ../site
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Setting Up Objects: setup-objects.md
+  - Fitting Models: fitting-models.md
+  - Setting Boundaries: boundaries.md
+  - Models and Methods: models-methods.md
+  - Monte Carlo Uncertainties: uncertainties.md
+  - Save and Load: save-load.md
+  - Plotting Results: plotting.md
+  - Generate Models: generate-models.md
+
+theme:
+  name: material
+
+markdown_extensions:
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.superfences

@@ -1,0 +1,1462 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../models-methods/">
+      
+      
+        <link rel="next" href="../save-load/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+    
+    
+      
+        <title>Monte Carlo Uncertainties - pySPAC Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#monte-carlo-uncertainties" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="pySPAC Documentation" class="md-header__button md-logo" aria-label="pySPAC Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            pySPAC Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Monte Carlo Uncertainties
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="pySPAC Documentation" class="md-nav__button md-logo" aria-label="pySPAC Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    pySPAC Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Getting Started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Setting Up Objects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fitting-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fitting Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../boundaries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Setting Boundaries
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../models-methods/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Models and Methods
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Monte Carlo Uncertainties
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monte Carlo Uncertainties
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-1-observational-uncertainties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 1: Observational Uncertainties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method 1: Observational Uncertainties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method Signature
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-magnitude-uncertainties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Without Magnitude Uncertainties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-2-unknown-rotational-variation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 2: Unknown Rotational Variation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method 2: Unknown Rotational Variation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-signature_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method Signature
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotational-amplitude-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rotational Amplitude Guide
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribution-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distribution Types
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-different-percentiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Different Percentiles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Different Percentiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-percentiles-68-confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Percentiles (68% confidence)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-confidence-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Confidence Levels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-confidence-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Confidence Levels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessing Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raw-monte-carlo-samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raw Monte Carlo Samples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processed-uncertainties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processed Uncertainties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thread Usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-between-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing Between Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing Between Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typical-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typical Use Cases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-and-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation and Diagnostics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation and Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convergence-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convergence Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#efficient-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Efficient Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../save-load/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Save and Load
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plotting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Plotting Results
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generate-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generate Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-1-observational-uncertainties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 1: Observational Uncertainties
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method 1: Observational Uncertainties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method Signature
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#without-magnitude-uncertainties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Without Magnitude Uncertainties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#method-2-unknown-rotational-variation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method 2: Unknown Rotational Variation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Method 2: Unknown Rotational Variation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Basic Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-signature_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Method Signature
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotational-amplitude-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rotational Amplitude Guide
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribution-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Distribution Types
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-different-percentiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Different Percentiles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Different Percentiles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-percentiles-68-confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      Default Percentiles (68% confidence)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-confidence-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Confidence Levels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-confidence-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Confidence Levels
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessing-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing Results
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessing Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raw-monte-carlo-samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Raw Monte Carlo Samples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#processed-uncertainties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processed Uncertainties
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thread-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Thread Usage
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-between-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing Between Methods
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing Between Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decision-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      Decision Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typical-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Typical Use Cases
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-and-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation and Diagnostics
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation and Diagnostics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#convergence-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Convergence Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sample-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sample Quality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Optimization
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#efficient-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Efficient Settings
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="monte-carlo-uncertainties">Monte Carlo Uncertainties<a class="headerlink" href="#monte-carlo-uncertainties" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>pySPAC provides two Monte Carlo methods for parameter uncertainty estimation:</p>
+<ol>
+<li><strong><code>monteCarloUncertainty()</code></strong> - Uses only observational errors</li>
+<li><strong><code>monteCarloUnknownRotation()</code></strong> - Estimates rotational lightcurve scatter</li>
+</ol>
+<h2 id="method-1-observational-uncertainties">Method 1: Observational Uncertainties<a class="headerlink" href="#method-1-observational-uncertainties" title="Permanent link">&para;</a></h2>
+<h3 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Fit model first</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">fitModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run Monte Carlo with observational errors</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># View results</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="method-signature">Method Signature<a class="headerlink" href="#method-signature" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">monteCarloUncertainty</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>n_simulations</strong> (int): Number of Monte Carlo iterations</li>
+<li><strong>model</strong> (str): Model to fit in each simulation</li>
+<li><strong>method</strong> (str): Optimization method</li>
+<li><strong>n_threads</strong> (int): Number of parallel threads (default: 1)</li>
+<li><strong>verbose</strong> (bool): Show progress bar (default: True)</li>
+</ul>
+<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Generate simulated datasets by adding Gaussian noise based on <code>magnitude_unc</code></li>
+<li>Fit the model to each noisy dataset</li>
+<li>Collect successful parameter estimates</li>
+<li>Calculate percentile-based uncertainties</li>
+</ol>
+<h3 id="without-magnitude-uncertainties">Without Magnitude Uncertainties<a class="headerlink" href="#without-magnitude-uncertainties" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># If no uncertainties provided, pySPAC estimates from RMS</span>
+<span class="n">pc</span> <span class="o">=</span> <span class="n">PhaseCurve</span><span class="p">(</span><span class="n">angle</span><span class="o">=</span><span class="n">angles</span><span class="p">,</span> <span class="n">magnitude</span><span class="o">=</span><span class="n">mags</span><span class="p">)</span>  <span class="c1"># No magnitude_unc</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">fitModel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">)</span>
+
+<span class="c1"># Automatically estimates uniform uncertainties</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span><span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="method-2-unknown-rotational-variation">Method 2: Unknown Rotational Variation<a class="headerlink" href="#method-2-unknown-rotational-variation" title="Permanent link">&para;</a></h2>
+<h3 id="basic-usage_1">Basic Usage<a class="headerlink" href="#basic-usage_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Include rotational scatter in uncertainty analysis</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUnknownRotation</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">amplitude_variation</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>  <span class="c1"># 0.15 mag rotational amplitude</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;sinusoidal&#39;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="method-signature_1">Method Signature<a class="headerlink" href="#method-signature_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">monteCarloUnknownRotation</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">,</span> <span class="n">amplitude_variation</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span>
+                         <span class="n">distribution</span><span class="o">=</span><span class="s2">&quot;sinusoidal&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">,</span>
+                         <span class="n">n_threads</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>amplitude_variation</strong> (float): Semi-amplitude of rotational variation (magnitudes)</li>
+<li><strong>distribution</strong> (str): "sinusoidal" or "uniform" (default: "sinusoidal")</li>
+<li>Other parameters same as <code>monteCarloUncertainty</code></li>
+</ul>
+<h3 id="rotational-amplitude-guide">Rotational Amplitude Guide<a class="headerlink" href="#rotational-amplitude-guide" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Typical asteroid rotational amplitudes</span>
+<span class="n">amplitudes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;spherical&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">,</span>      <span class="c1"># Nearly spherical objects</span>
+    <span class="s1">&#39;typical&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>        <span class="c1"># Average asteroids</span>
+    <span class="s1">&#39;elongated&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span>      <span class="c1"># Highly elongated objects</span>
+    <span class="s1">&#39;binary&#39;</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">,</span>         <span class="c1"># Binary systems</span>
+    <span class="s1">&#39;extreme&#39;</span><span class="p">:</span> <span class="mf">0.60</span>         <span class="c1"># Extreme cases</span>
+<span class="p">}</span>
+
+<span class="c1"># Usage</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUnknownRotation</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">amplitude_variation</span><span class="o">=</span><span class="n">amplitudes</span><span class="p">[</span><span class="s1">&#39;typical&#39;</span><span class="p">],</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;sinusoidal&#39;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="distribution-types">Distribution Types<a class="headerlink" href="#distribution-types" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Sinusoidal distribution (realistic for most asteroids)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUnknownRotation</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">amplitude_variation</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="s2">&quot;sinusoidal&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Uniform distribution (conservative estimate)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUnknownRotation</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">amplitude_variation</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="using-different-percentiles">Using Different Percentiles<a class="headerlink" href="#using-different-percentiles" title="Permanent link">&para;</a></h2>
+<h3 id="default-percentiles-68-confidence">Default Percentiles (68% confidence)<a class="headerlink" href="#default-percentiles-68-confidence" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Default: 15.87%, 50%, 84.13% (±1σ equivalent)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span><span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>  <span class="c1"># Shows default 68% confidence intervals</span>
+</code></pre></div>
+<h3 id="custom-confidence-levels">Custom Confidence Levels<a class="headerlink" href="#custom-confidence-levels" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 95% confidence interval (2σ equivalent)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">calculate_uncertainties</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">])</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="c1"># 99% confidence interval (3σ equivalent)</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">calculate_uncertainties</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">99.5</span><span class="p">])</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+<span class="c1"># 90% confidence interval</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">calculate_uncertainties</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">95</span><span class="p">])</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="multiple-confidence-levels">Multiple Confidence Levels<a class="headerlink" href="#multiple-confidence-levels" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">show_multiple_confidence_levels</span><span class="p">(</span><span class="n">pc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display uncertainties at multiple confidence levels.&quot;&quot;&quot;</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">([</span><span class="mf">15.87</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">84.13</span><span class="p">],</span> <span class="s2">&quot;68% (1σ)&quot;</span><span class="p">),</span>
+        <span class="p">([</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">],</span> <span class="s2">&quot;95% (2σ)&quot;</span><span class="p">),</span>
+        <span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">99.5</span><span class="p">],</span> <span class="s2">&quot;99% (3σ)&quot;</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Parameter&#39;</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Level&#39;</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Median&#39;</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Lower&#39;</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Upper&#39;</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">percentiles</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+        <span class="n">pc</span><span class="o">.</span><span class="n">calculate_uncertainties</span><span class="p">(</span><span class="n">percentiles</span><span class="o">=</span><span class="n">percentiles</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">pc</span><span class="o">.</span><span class="n">uncertainty_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">median</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">]</span>
+            <span class="n">lower</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;lower_error&#39;</span><span class="p">]</span>
+            <span class="n">upper</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s1">&#39;upper_error&#39;</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">&lt;10</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">median</span><span class="si">:</span><span class="s2">&lt;8.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">lower</span><span class="si">:</span><span class="s2">&lt;8.4f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">upper</span><span class="si">:</span><span class="s2">&lt;8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Usage after Monte Carlo analysis</span>
+<span class="n">show_multiple_confidence_levels</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="accessing-results">Accessing Results<a class="headerlink" href="#accessing-results" title="Permanent link">&para;</a></h2>
+<h3 id="raw-monte-carlo-samples">Raw Monte Carlo Samples<a class="headerlink" href="#raw-monte-carlo-samples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Access raw parameter samples</span>
+<span class="n">mc_samples</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">montecarlo_uncertainty</span>
+
+<span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">mc_samples</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Mean: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Std: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="processed-uncertainties">Processed Uncertainties<a class="headerlink" href="#processed-uncertainties" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Access processed uncertainty statistics</span>
+<span class="n">uncertainties</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">uncertainty_results</span>
+
+<span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">stats</span> <span class="ow">in</span> <span class="n">uncertainties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Median: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;median&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Upper error: +</span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;upper_error&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Lower error: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;lower_error&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Percentiles: </span><span class="si">{</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;percentiles&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="thread-usage">Thread Usage<a class="headerlink" href="#thread-usage" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
+
+<span class="c1"># Use multiple threads for faster computation</span>
+<span class="n">n_threads</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span>  <span class="c1"># Don&#39;t exceed 4 threads</span>
+
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">,</span>
+    <span class="n">n_threads</span><span class="o">=</span><span class="n">n_threads</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="choosing-between-methods">Choosing Between Methods<a class="headerlink" href="#choosing-between-methods" title="Permanent link">&para;</a></h2>
+<h3 id="decision-framework">Decision Framework<a class="headerlink" href="#decision-framework" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">choose_uncertainty_method</span><span class="p">(</span><span class="n">has_uncertainties</span><span class="p">,</span> <span class="n">rotational_knowledge</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Choose appropriate uncertainty method.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">rotational_knowledge</span> <span class="o">==</span> <span class="s2">&quot;negligible&quot;</span><span class="p">:</span>
+        <span class="c1"># Rotational amplitude &lt; 0.05 mag</span>
+        <span class="k">return</span> <span class="s2">&quot;monteCarloUncertainty&quot;</span>
+
+    <span class="k">elif</span> <span class="n">rotational_knowledge</span> <span class="o">==</span> <span class="s2">&quot;unknown&quot;</span><span class="p">:</span>
+        <span class="c1"># Unknown rotational state - conservative approach</span>
+        <span class="k">return</span> <span class="s2">&quot;monteCarloUnknownRotation&quot;</span>
+
+    <span class="k">elif</span> <span class="n">rotational_knowledge</span> <span class="o">==</span> <span class="s2">&quot;significant&quot;</span><span class="p">:</span>
+        <span class="c1"># Known large rotational amplitude</span>
+        <span class="k">return</span> <span class="s2">&quot;monteCarloUnknownRotation&quot;</span>
+
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">has_uncertainties</span><span class="p">:</span>
+        <span class="c1"># No observational errors - estimate both sources</span>
+        <span class="k">return</span> <span class="s2">&quot;monteCarloUnknownRotation&quot;</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Standard case with observational errors</span>
+        <span class="k">return</span> <span class="s2">&quot;monteCarloUncertainty&quot;</span>
+
+<span class="c1"># Usage</span>
+<span class="n">method</span> <span class="o">=</span> <span class="n">choose_uncertainty_method</span><span class="p">(</span>
+    <span class="n">has_uncertainties</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">rotational_knowledge</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Recommended method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="typical-use-cases">Typical Use Cases<a class="headerlink" href="#typical-use-cases" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Case 1: High-quality photometry, known spherical object</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span><span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">)</span>
+
+<span class="c1"># Case 2: Standard photometry, unknown rotation</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUnknownRotation</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">amplitude_variation</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>  <span class="c1"># Typical asteroid</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Case 3: Sparse data, possibly elongated object</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUnknownRotation</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">amplitude_variation</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>  <span class="c1"># Conservative estimate</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">distribution</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span>    <span class="c1"># Conservative distribution</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="validation-and-diagnostics">Validation and Diagnostics<a class="headerlink" href="#validation-and-diagnostics" title="Permanent link">&para;</a></h2>
+<h3 id="convergence-check">Convergence Check<a class="headerlink" href="#convergence-check" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_convergence</span><span class="p">(</span><span class="n">pc</span><span class="p">,</span> <span class="n">target_precision</span><span class="o">=</span><span class="mf">0.02</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if Monte Carlo has converged.&quot;&quot;&quot;</span>
+
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">montecarlo_uncertainty</span>
+
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">samples</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="c1"># Split into two halves</span>
+        <span class="n">half</span> <span class="o">=</span> <span class="n">n_samples</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">first_half</span> <span class="o">=</span> <span class="n">values</span><span class="p">[:</span><span class="n">half</span><span class="p">]</span>
+        <span class="n">second_half</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">half</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="n">half</span><span class="p">]</span>
+
+        <span class="c1"># Compare standard deviations</span>
+        <span class="n">std1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">first_half</span><span class="p">)</span>
+        <span class="n">std2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">second_half</span><span class="p">)</span>
+
+        <span class="n">relative_diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">std1</span> <span class="o">-</span> <span class="n">std2</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">std1</span><span class="p">,</span> <span class="n">std2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">relative_diff</span> <span class="o">&gt;</span> <span class="n">target_precision</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2"> may not be converged (</span><span class="si">{</span><span class="n">relative_diff</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OK: </span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2"> converged (</span><span class="si">{</span><span class="n">relative_diff</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Usage after Monte Carlo</span>
+<span class="n">check_convergence</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="sample-quality">Sample Quality<a class="headerlink" href="#sample-quality" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">analyze_sample_quality</span><span class="p">(</span><span class="n">pc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analyze quality of Monte Carlo samples.&quot;&quot;&quot;</span>
+
+    <span class="n">samples</span> <span class="o">=</span> <span class="n">pc</span><span class="o">.</span><span class="n">montecarlo_uncertainty</span>
+
+    <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">samples</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Basic statistics</span>
+        <span class="n">mean_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">median_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">std_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="c1"># Skewness and kurtosis</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+        <span class="n">skewness</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">kurtosis</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">kurtosis</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Samples: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Mean: </span><span class="si">{</span><span class="n">mean_val</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, Median: </span><span class="si">{</span><span class="n">median_val</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Std: </span><span class="si">{</span><span class="n">std_val</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Skewness: </span><span class="si">{</span><span class="n">skewness</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, Kurtosis: </span><span class="si">{</span><span class="n">kurtosis</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Flag potential issues</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">skewness</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  WARNING: High skewness&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">kurtosis</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  WARNING: High kurtosis&quot;</span><span class="p">)</span>
+
+<span class="c1"># Usage</span>
+<span class="n">analyze_sample_quality</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2>
+<h3 id="efficient-settings">Efficient Settings<a class="headerlink" href="#efficient-settings" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># For production analysis</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">,</span>
+    <span class="n">n_threads</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># Disable progress bar</span>
+<span class="p">)</span>
+
+<span class="c1"># For interactive exploration</span>
+<span class="n">pc</span><span class="o">.</span><span class="n">monteCarloUncertainty</span><span class="p">(</span>
+    <span class="n">n_simulations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="c1"># Fewer simulations for speed</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;HG&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;trust-constr&quot;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../save-load/">Save and Load</a> - Save and load analysis results</li>
+<li><a href="../plotting/">Plotting Results</a> - Plot and display results</li>
+<li><a href="../generate-models/">Generate Models</a> - Model generation from known parameters</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
