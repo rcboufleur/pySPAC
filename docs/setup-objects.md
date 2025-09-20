@@ -135,3 +135,9 @@ pc = PhaseCurve(angle=[5, 10, 15], magnitude=[15.2, 15.4, 15.7])
 print(pc)
 # Output: <PhaseCurve object with 3 data points | Not yet fitted>
 ```
+
+## Next Steps
+
+- [Fitting Models](fitting-models.md) - Detailed fitting procedures
+- [Setting Boundaries](boundaries.md) - Control parameter bounds and initial guesses
+- [Models and Methods](models-methods.md) - Model/method compatibility details

@@ -28,11 +28,13 @@ plt.plot(model_angles, model_mags, 'r-', label='HG Model')
 plt.gca().invert_yaxis()  # Astronomy convention: dimmer is up
 plt.xlabel('Phase Angle (degrees)')
 plt.ylabel('Reduced Magnitude')
-plt.title('Asteroid Phase Curve')
+plt.title('44 Nysa')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.show()
 ```
+
+![Simple Plot](images/simple-plot.png)
 
 ### Enhanced Plot
 
@@ -43,7 +45,7 @@ def plot_phase_curve(pc, model_name=None, title="Phase Curve"):
     if model_name is None:
         model_name = pc.fitting_model
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(9, 6))
 
     # Plot data with error bars
     ax.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
@@ -66,8 +68,8 @@ def plot_phase_curve(pc, model_name=None, title="Phase Curve"):
                 param_text.append(f'{param} = {value:.3f}')
 
         textstr = '\n'.join(param_text)
-        props = dict(boxstyle='round', facecolor='wheat', alpha=0.8)
-        ax.text(0.05, 0.95, textstr, transform=ax.transAxes,
+        props = dict(boxstyle='round', facecolor='white', alpha=1)
+        ax.text(0.03, 0.1, textstr, transform=ax.transAxes,
                verticalalignment='top', bbox=props)
 
     # Formatting
@@ -82,8 +84,10 @@ def plot_phase_curve(pc, model_name=None, title="Phase Curve"):
     plt.show()
 
 # Usage
-plot_phase_curve(pc, title="433 Eros Phase Curve")
+plot_phase_curve(pc, title="44 Nysa Phase Curve")
 ```
+
+![Enhanced Plot](images/enhanced-plot.png)
 
 ## Residual Plots
 
@@ -131,6 +135,8 @@ def plot_residuals(pc):
 plot_residuals(pc)
 ```
 
+![Residuals Plot](images/basic-residuals.png)
+
 ## Model Comparisons
 
 ### Multiple Models
@@ -139,7 +145,7 @@ plot_residuals(pc)
 def plot_model_comparison(pc, models=["HG", "HG12", "LINEAR"]):
     """Compare multiple models on same data."""
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(9, 6))
 
     # Plot data
     ax.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
@@ -186,6 +192,9 @@ def plot_model_comparison(pc, models=["HG", "HG12", "LINEAR"]):
 # Usage
 plot_model_comparison(pc, models=["HG", "HG12", "LINEAR"])
 ```
+
+![Multiple Models](images/multiple-models.png)
+
 
 ## Uncertainty Visualization
 
@@ -235,9 +244,11 @@ def plot_parameter_distributions(pc):
     plt.show()
 
 # Usage after Monte Carlo
-pc.monteCarloUncertainty(n_simulations=500, model="HG", method="trust-constr")
+pc.monteCarloUncertainty(n_simulations=50000, model="HG", method="trust-constr")
 plot_parameter_distributions(pc)
 ```
+
+![Parameter Distributions](images/parameters-distribution.png)
 
 ### Confidence Bands
 
@@ -318,110 +329,8 @@ def plot_confidence_bands(pc, model_name=None, n_curves=500):
 plot_confidence_bands(pc)
 ```
 
-## Advanced Plotting
+![Confidence Bands](images/confidence-bands.png)
 
-### Publication Quality Figure
+## Next Steps
 
-```python
-def publication_figure(pc, object_name="Asteroid"):
-    """Create publication-quality figure with subplots."""
-
-    fig = plt.figure(figsize=(12, 8))
-
-    # Main phase curve (top)
-    ax1 = plt.subplot(2, 2, (1, 2))
-
-    ax1.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
-                fmt='o', capsize=4, markersize=8, color='darkblue',
-                label='Photometric Data')
-
-    # Model curve
-    model_angles = np.linspace(0, max(30, np.max(pc.angle)+2), 300)
-    model_mags = pc.generateModel(model=pc.fitting_model, degrees=model_angles)
-    ax1.plot(model_angles, model_mags, 'r-', linewidth=2,
-            label=f'{pc.fitting_model} Model')
-
-    ax1.invert_yaxis()
-    ax1.set_xlabel('Phase Angle (degrees)', fontsize=12)
-    ax1.set_ylabel('Reduced Magnitude', fontsize=12)
-    ax1.set_title(f'{object_name} Phase Curve', fontsize=14)
-    ax1.legend()
-    ax1.grid(True, alpha=0.3)
-
-    # Residuals (bottom left)
-    ax2 = plt.subplot(2, 2, 3)
-    if pc.fit_residual:
-        residuals = np.array(pc.fit_residual)
-        ax2.plot(pc.angle, residuals, 'o-', markersize=6)
-        ax2.axhline(y=0, color='red', linestyle='--', alpha=0.7)
-        rms = np.sqrt(np.mean(residuals**2))
-        ax2.set_title(f'Residuals (RMS = {rms:.4f})')
-    ax2.set_xlabel('Phase Angle (degrees)')
-    ax2.set_ylabel('Residual (mag)')
-    ax2.grid(True, alpha=0.3)
-
-    # Parameter table (bottom right)
-    ax3 = plt.subplot(2, 2, 4)
-    ax3.axis('off')
-
-    # Create parameter table
-    if pc.uncertainty_results:
-        table_data = []
-        for param, stats in pc.uncertainty_results.items():
-            if not param.lower().startswith('constraint'):
-                table_data.append([
-                    param,
-                    f"{stats['median']:.4f}",
-                    f"+{stats['upper_error']:.4f}",
-                    f"{stats['lower_error']:.4f}"
-                ])
-
-        if table_data:
-            table = ax3.table(cellText=table_data,
-                             colLabels=['Parameter', 'Value', 'Upper', 'Lower'],
-                             cellLoc='center', loc='center')
-            table.auto_set_font_size(False)
-            table.set_fontsize(10)
-            table.scale(1.2, 1.5)
-
-    plt.tight_layout()
-    plt.show()
-
-# Usage
-pc.monteCarloUncertainty(n_simulations=3000, model="HG", method="trust-constr")
-publication_figure(pc, object_name="433 Eros")
-```
-
-### Save Figures
-
-```python
-def save_plots(pc, basename="phase_curve", formats=['png', 'pdf']):
-    """Save plots in multiple formats."""
-
-    # Create the plot
-    fig, ax = plt.subplots(figsize=(10, 6))
-
-    ax.errorbar(pc.angle, pc.magnitude, yerr=pc.magnitude_unc,
-               fmt='o', capsize=5, label='Data')
-
-    model_angles = np.linspace(0, 30, 200)
-    model_mags = pc.generateModel(model=pc.fitting_model, degrees=model_angles)
-    ax.plot(model_angles, model_mags, 'r-', label=f'{pc.fitting_model} Model')
-
-    ax.invert_yaxis()
-    ax.set_xlabel('Phase Angle (degrees)')
-    ax.set_ylabel('Reduced Magnitude')
-    ax.legend()
-    ax.grid(True, alpha=0.3)
-
-    # Save in multiple formats
-    for fmt in formats:
-        filename = f"{basename}.{fmt}"
-        plt.savefig(filename, dpi=300, bbox_inches='tight')
-        print(f"Saved {filename}")
-
-    plt.show()
-
-# Usage
-save_plots(pc, basename="asteroid_analysis", formats=['png', 'pdf', 'svg'])
-```
+- [Generate Models](generate-models.md) - Model generation from known parameters

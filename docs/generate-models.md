@@ -84,24 +84,27 @@ print(f"Generated {len(angles)} points from 0° to 30°")
 def generate_standard_types():
     """Generate phase curves for standard asteroid taxonomic types."""
 
-    # Typical parameters for different types
+    # Typical slope parameters (G) per type
     standard_types = {
-        'C-type': {'H': 10.0, 'G': 0.15},  # Carbonaceous
-        'S-type': {'H': 12.0, 'G': 0.25},  # Silicaceous
-        'M-type': {'H': 11.0, 'G': 0.20},  # Metallic
-        'V-type': {'H': 13.0, 'G': 0.30}   # Basaltic
+        'C-type': {'G': 0.15},  # Carbonaceous (dark, shallow slope)
+        'S-type': {'G': 0.25},  # Silicaceous
+        'M-type': {'G': 0.20},  # Metallic
+        'V-type': {'G': 0.30}   # Basaltic (steeper slope)
     }
+
+    # Use a single reference H (absolute magnitude)
+    H_ref = 12.0
 
     phase_angles = np.linspace(0, 30, 150)
     models = {}
 
     for ast_type, params in standard_types.items():
-        pc = PhaseCurve(angle=phase_angles, **params)
+        pc = PhaseCurve(angle=phase_angles, H=H_ref, **params)
         magnitudes = pc.generateModel(model="HG")
         models[ast_type] = {
             'angles': phase_angles,
             'magnitudes': magnitudes,
-            'params': params
+            'params': {'H': H_ref, **params}
         }
 
     return models
@@ -114,12 +117,12 @@ models = generate_standard_types()
 plt.figure(figsize=(10, 6))
 for ast_type, data in models.items():
     plt.plot(data['angles'], data['magnitudes'],
-            label=f"{ast_type} (G={data['params']['G']})")
+             label=f"{ast_type} (G={data['params']['G']})")
 
 plt.gca().invert_yaxis()
 plt.xlabel('Phase Angle (degrees)')
 plt.ylabel('Reduced Magnitude')
-plt.title('Standard Asteroid Type Phase Curves')
+plt.title('Standard Asteroid Type Phase Curves (HG model)')
 plt.legend()
 plt.show()
 ```

@@ -166,10 +166,8 @@ data_driven_conditions = [
 pc.fitModel(model="HG", method="trust-constr", initial_conditions=data_driven_conditions)
 ```
 
-## Best Practices
+## Next Steps
 
-1. **Always set physical bounds** for slope parameters (G, G1, G2: 0-1 range)
-2. **Use reasonable H ranges** based on object type and expected size
-3. **Check boundary warnings** after fitting
-4. **Try multiple starting points** for complex models
-5. **Use data-driven estimates** when available
+- [Models and Methods](models-methods.md) - Model/method compatibility details
+- [Monte Carlo Uncertainties](uncertainties.md) - Parameter error estimation
+- [Save and Load](save-load.md) - Save and load analysis results
