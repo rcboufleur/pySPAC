@@ -1,9 +1,13 @@
 name: Deploy MkDocs Documentation
+
 on:
   push:
     branches: [ main ]
     paths: [ 'docs/**' ]  # Only trigger when docs change
   workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
 
 jobs:
   deploy:
@@ -23,6 +27,8 @@ jobs:
           pip install -r docs/requirements.txt
 
       - name: Deploy to GitHub Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd docs
-          mkdocs gh-deploy --config-file mkdocs.yml --remote-branch gh-pages
+          mkdocs gh-deploy --config-file mkdocs.yml --remote-branch gh-pages --remote-name origin --force
